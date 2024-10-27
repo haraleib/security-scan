@@ -1,0 +1,14 @@
+name: security-scan
+image: haraleib/security-scan:0.0.0
+description: Security scan to find vulnerabilities in PR and write comments
+category: Security
+repository: https://bitbucket.org/haraldeibensteiner/security-scan
+vendor:
+  name: Harald Eibensteiner
+  website: Harald Eibensteiner
+maintainer:
+  name: Harald Eibensteiner
+  website: Harald Eibensteiner
+tags:
+    - security
+    - vulnerabilities
