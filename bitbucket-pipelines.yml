@@ -7,6 +7,15 @@ test: &test
     script:
       - chmod +x ./mvnw
       - ./mvnw package
+    services:
+      - docker
+
+integration-test: &integration-test
+  step:
+    name: Run Junit and Integration Tests
+    script:
+      - chmod +x ./mvnw
+      - ./mvnw package
       - npm install -g bats
       - chmod a+x test/*.bats
       - bats test/test.bats
@@ -29,6 +38,8 @@ push: &push
 pipelines:
   default:
   - <<: *test
+  integration-test:
+  - <<: *integration-test
   branches:
     master:
     - <<: *test
