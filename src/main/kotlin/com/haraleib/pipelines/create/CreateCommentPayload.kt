@@ -9,7 +9,7 @@ class CreateCommentPayload(private val violation: SecurityScanViolation) : Paylo
     """
       {
         "content": {
-           "raw": "${violation.message.replace("\n", "\\n")}"
+           "raw": "${violation.sanitizedMessage}"
         },
         "inline": {
           "to": ${violation.startLine},
@@ -17,19 +17,4 @@ class CreateCommentPayload(private val violation: SecurityScanViolation) : Paylo
         }
      }
     """.trimIndent()
-
-/*
-  """
-      {
-        "content": {
-           "raw": "${violation.message.replace("\n", "\\n")}"
-        },
-        "inline": {
-          it seems that when using it this way the comment is made in from / startLine in the old line not in the new line diff
-          "from": ${violation.startLine},
-          "to": ${violation.endLine},
-          "path": "${violation.sanitizedFile()}"
-        }
-     }
-    """.trimIndent()*/
 }

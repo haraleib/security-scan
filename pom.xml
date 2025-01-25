@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.haraleib.pipelines</groupId>
   <artifactId>security-scan</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -14,6 +14,7 @@
     <version.shade>3.6.0</version.shade>
     <version.violations>1.157.3</version.violations>
     <version.http>4.5.14</version.http>
+    <version.apache_commons_text>1.13.0</version.apache_commons_text>
     <version.logback>1.5.15</version.logback>
     <version.pmd>7.9.0</version.pmd>
     <version.surefire>3.5.2</version.surefire>
@@ -33,6 +34,12 @@
       <artifactId>httpclient</artifactId>
       <version>${version.http}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>${version.apache_commons_text}</version>
+    </dependency>
+
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>

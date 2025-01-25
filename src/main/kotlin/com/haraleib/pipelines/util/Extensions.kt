@@ -15,8 +15,11 @@ import com.haraleib.pipelines.pmd.PMDAnalyzer
 import com.haraleib.pipelines.pmd.PMDViolationsCollector
 import com.haraleib.pipelines.remove.RemoveCommentSender
 import com.haraleib.pipelines.util.EnvVars.debug
+import org.apache.commons.text.StringEscapeUtils
+import org.apache.http.HttpEntity
 import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.util.EntityUtils
 import org.slf4j.Logger
 import se.bjurr.violations.lib.model.Violation
 

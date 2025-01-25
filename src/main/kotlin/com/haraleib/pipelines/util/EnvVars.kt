@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory.getLogger
 
 object EnvVars {
 
-  val logger: Logger = getLogger(EnvVarsTest::class.java)
+  val logger: Logger = getLogger(EnvVars::class.java)
 
   val CPU_COUNT: String = getEnvVar("CPU_COUNT", "1")
   val ENV_BITBUCKET_PR_ID: String = getEnvVar("BITBUCKET_PR_ID", "")
@@ -20,10 +20,12 @@ object EnvVars {
   private fun getEnvVar(envVar: String, default: String): String {
     var env = System.getenv(envVar)
     if (env == null) env = default
-    /*    if (envVar == "REPOSITORY_ACCESS_TOKEN")
-          deb("Accessing variable: $envVar with value: ***************")
-        else*/
-    deb("Accessing variable: $envVar with value: $env")
+
+    if (envVar == "REPOSITORY_ACCESS_TOKEN")
+      deb("Accessing variable: $envVar with value: ***************")
+    else
+      deb("Accessing variable: $envVar with value: $env")
+
     return env
   }
 

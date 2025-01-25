@@ -2,7 +2,6 @@ package com.haraleib.pipelines.pmd
 
 import com.haraleib.pipelines.api.Analyzer
 import com.haraleib.pipelines.report.ReportSettings
-import com.haraleib.pipelines.util.EnvVars.debug
 import com.haraleib.pipelines.util.deb
 import net.sourceforge.pmd.PMDConfiguration
 import net.sourceforge.pmd.PmdAnalysis
@@ -27,19 +26,10 @@ class PMDAnalyzer(private val settings : ReportSettings, private val changedFile
     }
 
     PmdAnalysis.create(config).use { pmd ->
-      if (debug()) {
-        addConsoleRenderer(pmd)
-      }
       addFileRenderer(pmd)
       pmd.newRuleSetLoader().standardRuleSets.forEach { ruleSet -> pmd.addRuleSet(ruleSet) }
       pmd.performAnalysis()
     }
-  }
-
-  private fun addConsoleRenderer(pmd : PmdAnalysis){
-/*    val consoleRenderer = RendererFactory.createRenderer("textcolor", Properties())
-    consoleRenderer.writer = System.out.writer()
-    pmd.addRenderer(consoleRenderer)*/
   }
 
   private fun addFileRenderer(pmd : PmdAnalysis){
