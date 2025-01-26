@@ -42,7 +42,7 @@ build: &build
 
 push: &push
   step:
-    name: Push and Tag
+    name: Push Image
     script:
       - pipe: atlassian/bitbucket-pipe-release:5.8.0
         variables:
