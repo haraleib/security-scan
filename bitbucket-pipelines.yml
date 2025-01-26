@@ -8,33 +8,50 @@ test: &test
       - ./mvnw package
     services:
       - docker
-#run an integration on a predefined PR. See test.bats for further information
+      -
+#Run an integration on a predefined PR. This does not run per default.
 integration-test: &integration-test
   step:
     name: Integration Tests
     script:
       - chmod +x ./mvnw
-      - ./mvnw package
+      - ./mvnw package -Dmaven.test.skip
       - npm install -g bats
       - chmod a+x test/*.bats
       - bats test/test.bats
     services:
       - docker
 
+build: &build
+  step:
+    name: Build Docker Image
+    script:
+      # build security-scan-runner.jar needed by Dockerfile
+      - chmod +x ./mvnw
+      - ./mvnw package -Dmaven.test.skip
+      # build docker image artifact
+      - export IMAGE_NAME=haraleib/${BITBUCKET_REPO_SLUG}
+      - export IMAGE_VERSION=pipelines-${BITBUCKET_BUILD_NUMBER}
+      - docker build -t $IMAGE_NAME:$IMAGE_VERSION -t $IMAGE_NAME:latest ./docker/
+      - docker save --output docker-image.tar.gz $IMAGE_NAME
+      - chmod +r docker-image.tar.gz
+    services:
+      - docker
+    artifacts:
+      - docker-image.tar.gz
+
 push: &push
   step:
     name: Push and Tag
-    image: python:3.10
     script:
       - pipe: atlassian/bitbucket-pipe-release:5.8.0
-        #https://bitbucket.org/atlassian/bitbucket-pipe-release/src/master/
-        #To specify dockerfile and context:
         variables:
           REGISTRY_USERNAME: $REGISTRY_USERNAME
           REGISTRY_PASSWORD: $REGISTRY_PASSWORD
           IMAGE: haraleib/$BITBUCKET_REPO_SLUG
-          DOCKERFILE: ./docker
-          CONTEXT: ./docker
+          VERSION: 'latest'
+          DOCKER_IMAGE_ARCHIVE_FILEPATH: docker-image.tar.gz
+          GIT_PUSH: 'false'
     services:
       - docker
 
@@ -47,6 +64,7 @@ pipelines:
   branches:
     master:
     - <<: *test
+    - <<: *build
     - <<: *push
   #run security-scan on current PR
   pull-requests:
