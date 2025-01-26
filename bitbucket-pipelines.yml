@@ -1,18 +1,17 @@
-image:
-  name: atlassian/default-image:3
+image: atlassian/default-image:4
 
 test: &test
   step:
-    name: Run Junit and Integration Tests
+    name: Junit Tests
     script:
       - chmod +x ./mvnw
       - ./mvnw package
     services:
       - docker
-
+#run an integration on a predefined PR. See test.bats for further information
 integration-test: &integration-test
   step:
-    name: Run Junit and Integration Tests
+    name: Integration Tests
     script:
       - chmod +x ./mvnw
       - ./mvnw package
@@ -27,20 +26,35 @@ push: &push
     name: Push and Tag
     image: python:3.10
     script:
-      - pipe: atlassian/bitbucket-pipe-release:5.6.0
+      - pipe: atlassian/bitbucket-pipe-release:5.8.0
+        #https://bitbucket.org/atlassian/bitbucket-pipe-release/src/master/
+        #To specify dockerfile and context:
         variables:
           REGISTRY_USERNAME: $REGISTRY_USERNAME
           REGISTRY_PASSWORD: $REGISTRY_PASSWORD
           IMAGE: haraleib/$BITBUCKET_REPO_SLUG
+          DOCKERFILE: ./docker
+          CONTEXT: ./docker
     services:
       - docker
 
 pipelines:
   default:
   - <<: *test
-  integration-test:
-  - <<: *integration-test
+  custom:
+    integration-test:
+    - <<: *integration-test
   branches:
     master:
     - <<: *test
     - <<: *push
+  #run security-scan on current PR
+  pull-requests:
+    '**':
+      - step:
+          name: Security Scan
+          script:
+            - pipe: docker://haraleib/security-scan:latest
+              variables:
+                REPOSITORY_ACCESS_TOKEN: ${SECURITY_SCAN_AUTH_TOKEN}
+                DEBUG: "true"

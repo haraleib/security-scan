@@ -70,7 +70,7 @@ class PMDTest {
     //assert
     val iter = result.iterator()
     assertEquals(2, result.size)
-    assertTrue(iter.next().sanitizedMessage.startsWith("Avoid unused local variables such as \\'t\\'."))
+    assertTrue(iter.next().sanitizedMessage.startsWith("Avoid unused local variables such as 't'."))
     assertTrue(iter.next().sanitizedMessage.startsWith("Avoid variables with short names like t"))
   }
 }
