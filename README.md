@@ -7,42 +7,44 @@ Secuirity scan to find vulnerablities in PR and write comments
 Add the following snippet to the script section of your `bitbucket-pipelines.yml` file:
 
 ```yaml
+
 script:
-  - pipe: haraldeibensteiner/security-scan:0.0.0
-    variables:
-      NAME: "<string>"
+  script:
+    - pipe: docker://haraleib/security-scan:latest
+      variables:
+      REPOSITORY_ACCESS_TOKEN: ${SECURITY_SCAN_AUTH_TOKEN}
       # DEBUG: "<boolean>" # Optional
 ```
 ## Variables
 
-| Variable | Usage                                              |
-|----------|----------------------------------------------------|
-| NAME (*) | The name that will be printed in the logs          |
-| DEBUG    | Turn on extra debug information. Default: `false`. |
+| Variable                    | Usage                                                                                             |
+|-----------------------------|---------------------------------------------------------------------------------------------------|
+| REPOSITORY_ACCESS_TOKEN (*) | Bitbucket repository variable which contains an access-token with pull requests write permissions |
+| DEBUG                       | Turn on extra debug information. Default: `false`.                                                | 
 
 _(*) = required variable._
 
 ## Prerequisites
+
+Repository hosted on Bitbucket Cloud.
 
 ## Examples
 
 Basic example:
 
 ```yaml
-script:
-  - pipe: haraldeibensteiner/security-scan:0.0.0
-    variables:
-      NAME: "foobar"
-```
+image: atlassian/default-image:4
 
-Advanced example:
-
-```yaml
-script:
-  - pipe: haraldeibensteiner/security-scan:0.0.0
-    variables:
-      NAME: "foobar"
-      DEBUG: "true"
+pipelines:
+  pull-requests:
+  '**':
+    - step:
+      name: Security Scan
+      script:
+        - pipe: docker://haraleib/security-scan:latest
+          variables:
+          REPOSITORY_ACCESS_TOKEN: ${SECURITY_SCAN_AUTH_TOKEN}
+          # DEBUG: "<boolean>" # Optional
 ```
 
 ## Support

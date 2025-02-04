@@ -3,7 +3,6 @@ LABEL org.opencontainers.image.authors="harald.eib@gmail.com"
 
 RUN apk add --update --no-cache bash
 
-#Enrich with https://bitbucket.org/bitbucketpipelines/bitbucket-pipes-toolkit/src/master/
 #Install bitbucket necessary toolkit
 RUN wget --no-verbose -P / https://bitbucket.org/bitbucketpipelines/bitbucket-pipes-toolkit-bash/raw/0.6.0/common.sh
 RUN chmod a+x /common.sh

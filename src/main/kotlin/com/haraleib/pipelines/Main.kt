@@ -52,7 +52,11 @@ object Main {
 
   @JvmStatic
   fun main(args: Array<String>) {
-    inf("Start evaluating for Repository: ${bitbucketSettings.repoSlug}, Pull Request ID: ${bitbucketSettings.pullRequestId}, Commit: ${bitbucketSettings.commit} ...")
+    inf(
+      "Start evaluating for Repository: ${bitbucketSettings.repoSlug}, " +
+        "Pull Request ID: ${bitbucketSettings.pullRequestId}, " +
+        "Commit: ${bitbucketSettings.commit} ..."
+      )
 
     inf("Start extracting diff ...")
     val changedLines = extractDiff()
@@ -66,13 +70,14 @@ object Main {
     inf("Start deleting old comments ...")
     deletePreviousComments();
 
-    inf("Start processing comments ...")
-    createComments(violations)
-
     if (violations.isEmpty()) {
+      inf("No violations found on PR ...")
       inf("Remove request changes on bitbucket PR ...")
       bitbucket.removeRequestChanges()
     } else {
+      inf("Start processing comments ...")
+      createComments(violations)
+
       inf("Request changes on bitbucket PR ...")
       bitbucket.requestChanges()
     }
